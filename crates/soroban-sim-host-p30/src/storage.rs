@@ -770,24 +770,17 @@ impl Storage {
     // Test-only helper for getting the value directly from the storage map,
     // without the footprint management and autorestoration.
     #[cfg(any(test, feature = "testutils"))]
-    #[allow(clippy::redundant_closure_call)] // Preserve upstream early returns while observing the result.
     pub(crate) fn get_from_map(
         &self,
         key: &Rc<LedgerKey>,
         host: &Host,
     ) -> Result<Option<EntryWithLiveUntil>, HostError> {
-        let observation_key = key.clone();
-        let result = (|| {
         match self.map.get::<Rc<LedgerKey>>(key, host.budget_ref())? {
             Some(Some((entry, live_until))) => {
                 Ok(Some((entry.decoded(host.budget_ref())?, *live_until)))
             }
             Some(None) | None => Ok(None),
         }
-
-        })();
-        host.observe(|| Ok(crate::inspection::Event::LedgerStorage { operation: "get", key: observation_key.as_ref().clone(), succeeded: result.is_ok() }));
-        result
     }
 
     fn prepare_read_only_access(

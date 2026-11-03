@@ -27,7 +27,7 @@
     },
     "src/storage.rs": {
       "upstream_sha256": "03831101eefc0fa9957ec690152f932aec42b3f9b7282e4a60da813dd756e3aa",
-      "patched_sha256": "893c2b1b653e66a123336148e80d712bab1ad6271311f5e4bc3f60bb6b614108"
+      "patched_sha256": "13fbb8c77aa180cd65f59900f5b898f7e2617e9061fe9fadc17129b327314d12"
     }
   }
 }
