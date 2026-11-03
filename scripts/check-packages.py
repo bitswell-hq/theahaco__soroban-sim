@@ -31,9 +31,9 @@ def main():
     nodes = {n["id"]: n for n in metadata["resolve"]["nodes"]}
     if any(p["source"] and p["source"].startswith("git+") for p in metadata["packages"]):
         raise SystemExit("Release dependency graph still contains Git-only sources")
-    host = next(p for p in members if p["name"] == "soroban-sim-host")
-    if "recording_mode" in nodes[host["id"]]["features"]:
-        raise SystemExit("The isolated application host has recording_mode enabled")
+    for host in (p for p in members if p["name"].startswith("soroban-sim-host")):
+        if any(feature in nodes[host["id"]]["features"] for feature in ("recording_mode", "testutils")):
+            raise SystemExit(f"The isolated application host {host['name']} has recording/test features enabled")
     package_args = ["cargo", "package", "--workspace", "--locked"]
     if args.allow_dirty:
         package_args.append("--allow-dirty")
