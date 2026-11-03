@@ -110,7 +110,7 @@ impl TransactionTrace {
     }
 }
 
-#[cfg(feature = "exact-apply")]
+#[cfg(exact_apply)]
 pub(crate) mod capture {
     use super::super::applier::host;
     use super::*;

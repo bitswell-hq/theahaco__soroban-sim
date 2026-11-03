@@ -3,20 +3,24 @@
 `soroban-sim-core` selects exactly one host per build. Run a test binary for
 each protocol to compare the same contracts and inputs across versions.
 
-| Feature | Recording host / simulation | Isolated application host |
-| --- | --- | --- |
-| `host-p27` | 27.0.1 | `soroban-sim-host-p27` |
-| `host-p29` (default) | 29.0.2 | `soroban-sim-host` |
-| `host-p30` | 30.0.0 | `soroban-sim-host-p30` |
+| Host feature | Recording host / simulation | Exact-apply feature | Isolated application host |
+| --- | --- | --- | --- |
+| `host-p27` | 27.0.1 | `exact-apply-p27` | `soroban-sim-host-p27` |
+| `host-p29` (default) | 29.0.2 | `exact-apply` (default) | `soroban-sim-host` |
+| `host-p30` | 30.0.0 | `exact-apply-p30` | `soroban-sim-host-p30` |
 
 ```sh
-cargo test -p soroban-sim-core --no-default-features --features host-p27,exact-apply
+cargo test -p soroban-sim-core --no-default-features --features host-p27,exact-apply-p27
 cargo test -p soroban-sim-core --no-default-features --features host-p29,exact-apply
-cargo test -p soroban-sim-core --no-default-features --features host-p30,exact-apply
+cargo test -p soroban-sim-core --no-default-features --features host-p30,exact-apply-p30
 ```
 
+A host feature alone selects only the recording host and simulation library;
+it does not build an isolated application host. Pairing an exact-apply feature
+with another line, or selecting more than one, is a compile error.
+
 In a Rust consumer, disable defaults and select `host-p27` (or another line)
-plus `exact-apply`. Import XDR and host types from `soroban_sim_core::host`,
+plus its exact-apply feature. Import XDR and host types from `soroban_sim_core::host`,
 and simulation types from `soroban_sim_core::simulation`, so they belong to
 the selected version. Selecting multiple lines is a compile error. Cargo
 unifies features: test different versions in separate builds, not by enabling
@@ -59,7 +63,7 @@ let trace = record.trace.as_ref().expect("host was invoked");
 assert!(trace.complete);
 ```
 
-Inspection requires `exact-apply`; unsupported builds reject the request
+Inspection requires the line's exact-apply feature; unsupported builds reject the request
 before consuming a sequence or fee. It observes the original enforcing run,
 including failed transactions, without requiring diagnostics or a replay.
 Rejected transactions and failures before host execution have no host trace.

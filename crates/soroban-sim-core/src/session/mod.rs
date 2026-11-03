@@ -357,7 +357,7 @@ pub struct SubmitOptions {
     /// deterministic session seed instead, so contracts that use the PRNG see
     /// other values than on chain.
     pub prng_seed: Option<[u8; 32]>,
-    /// Capture typed auth inputs, refusals and per-frame storage accesses. Requires exact-apply.
+    /// Capture typed auth inputs, refusals and per-frame storage accesses. Requires the selected line's exact-apply feature.
     pub trace: bool,
 }
 
@@ -704,7 +704,7 @@ impl Session {
 
     /// [`Session::submit`] with what the ledger close decides set explicitly.
     pub fn submit_with(&mut self, label: &str, envelope: &TransactionEnvelope, options: &SubmitOptions) -> Result<TxRecord> {
-        if options.trace && !EXACT_APPLY { bail!("transaction inspection requires the exact-apply feature"); }
+        if options.trace && !EXACT_APPLY { bail!("transaction inspection requires an exact-apply feature (exact-apply, exact-apply-p27 or exact-apply-p30)"); }
         let validator = TxValidator {
             ledger: &self.ledger,
             info: &self.info,

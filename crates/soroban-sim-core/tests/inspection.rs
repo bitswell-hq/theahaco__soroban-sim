@@ -1,4 +1,4 @@
-#![cfg(feature = "exact-apply")]
+#![cfg(exact_apply)]
 mod common;
 use common::*;
 use soroban_sim_core::{host::xdr::*, session::*};

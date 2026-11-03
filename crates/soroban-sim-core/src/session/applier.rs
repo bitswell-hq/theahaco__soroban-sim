@@ -16,14 +16,14 @@ use soroban_env_host::xdr::{
 use soroban_simulation::NetworkConfig;
 use std::collections::BTreeSet;
 
-// The host transactions apply with. With `exact-apply` (the default) it is a
+// The host transactions apply with. With an exact-apply feature (the default) it is a
 // separate build of the same release without `recording_mode`, metered
 // exactly as stellar-core's; without it, the shared recording-mode build.
-#[cfg(feature = "exact-apply")]
+#[cfg(exact_apply)]
 pub(super) use soroban_env_host_apply as host;
 /// Whether transactions apply with the exact-metering host build.
-pub const EXACT_APPLY: bool = cfg!(feature = "exact-apply");
-#[cfg(not(feature = "exact-apply"))]
+pub const EXACT_APPLY: bool = cfg!(exact_apply);
+#[cfg(not(exact_apply))]
 use soroban_env_host as host;
 use host::budget::Budget;
 use host::e2e_invoke;
@@ -370,11 +370,11 @@ impl Applier {
         let seed = prng_seed.unwrap_or_else(|| super::prng_seed(b"apply", seq, self.tx_index));
         self.tx_index += 1;
         let mut diagnostics = vec![];
-        #[cfg(feature = "exact-apply")]
+        #[cfg(exact_apply)]
         let capture = trace.then(|| super::inspection::capture::hook(op.auth.as_slice()));
-        #[cfg(feature = "exact-apply")]
+        #[cfg(exact_apply)]
         let hook = capture.as_ref().map(|c| c.0.clone());
-        #[cfg(not(feature = "exact-apply"))]
+        #[cfg(not(exact_apply))]
         let hook = { let _ = trace; None };
         let res = adapter::invoke_host_function(
             &budget,
@@ -391,7 +391,7 @@ impl Applier {
             hook,
             Some(self.module_cache.clone()),
         );
-        #[cfg(feature = "exact-apply")]
+        #[cfg(exact_apply)]
         if let Some((_, capture)) = capture { applied.trace = Some(capture.take()); }
         applied.cpu_insns = budget.get_cpu_insns_consumed()?;
         applied.mem_bytes = budget.get_mem_bytes_consumed()?;

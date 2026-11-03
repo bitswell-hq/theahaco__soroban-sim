@@ -30,10 +30,14 @@ soroban-env-host-apply-p30 = { package = "soroban-sim-host-p30", path = "../soro
 default = ["exact-apply", "host-p29"]
 # Apply session transactions with a host built without `recording_mode`, so
 # CPU metering matches stellar-core exactly (see the workspace manifest).
-exact-apply = []
-host-p27 = ["dep:soroban-env-host-p27", "dep:soroban-simulation-p27", "dep:soroban-env-host-apply-p27"]
-host-p29 = ["dep:soroban-env-host", "dep:soroban-simulation", "dep:soroban-env-host-apply"]
-host-p30 = ["dep:soroban-env-host-p30", "dep:soroban-simulation-p30", "dep:soroban-env-host-apply-p30"]
+# Each line has its own isolated host: pair exact-apply with host-p29,
+# exact-apply-p27 with host-p27 and exact-apply-p30 with host-p30.
+exact-apply = ["dep:soroban-env-host-apply"]
+exact-apply-p27 = ["dep:soroban-env-host-apply-p27"]
+exact-apply-p30 = ["dep:soroban-env-host-apply-p30"]
+host-p27 = ["dep:soroban-env-host-p27", "dep:soroban-simulation-p27"]
+host-p29 = ["dep:soroban-env-host", "dep:soroban-simulation"]
+host-p30 = ["dep:soroban-env-host-p30", "dep:soroban-simulation-p30"]
 
 [dev-dependencies]
 base64 = "0.22"
