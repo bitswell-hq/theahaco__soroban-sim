@@ -2418,6 +2418,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "soroban-sim-preview"
+version = "0.1.0"
+dependencies = [
+ "base64 0.22.1",
+ "serde_json",
+ "sha2",
+ "soroban-env-host 29.0.2",
+ "soroban-env-host 30.0.0",
+ "soroban-simulation 29.0.2",
+ "soroban-simulation 30.0.0",
+]
+
+[[package]]
 name = "soroban-simulation"
 version = "29.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
