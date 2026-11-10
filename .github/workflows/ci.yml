@@ -18,6 +18,7 @@ jobs:
         with:
           python-version: '3.13'
       - run: python scripts/sync-package-assets.py --check
+      - run: python scripts/sync-protocol-twins.py --check
       - run: python scripts/check-upstream-host.py
       - run: python scripts/test-release-tools.py
       - run: go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
