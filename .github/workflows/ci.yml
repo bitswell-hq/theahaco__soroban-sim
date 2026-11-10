@@ -50,7 +50,13 @@ jobs:
       - run: cargo check --workspace --locked
       - run: cargo check -p soroban-sim-component --target wasm32-wasip2 --locked
 
+  # The 9-target binary matrix only runs for release-plz's release PR branch
+  # (default prefix `release-plz-`; release-plz.toml does not override it).
+  # Tag releases still build every binary in cd-soroban-sim.yml.
   binaries:
+    if: >-
+      (github.event_name == 'pull_request' && startsWith(github.head_ref, 'release-plz-')) ||
+      (github.event_name == 'push' && startsWith(github.ref_name, 'release-plz-'))
     uses: ./.github/workflows/build-cli.yml
 
   milestone-0:
